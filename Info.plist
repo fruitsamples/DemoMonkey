@@ -36,17 +36,17 @@
 	<key>CFBundleExecutable</key>
 	<string>DemoMonkey</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.DemoMonkey</string>
+	<string>com.apple.DemoMonkey</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>LSMinimumSystemVersion</key>

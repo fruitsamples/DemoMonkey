@@ -3,7 +3,7 @@
      File: AppDelegate.h
  Abstract: Application delegate class to act as the Services provider.  Services requests are routed to the current main document. The delegate also manages the application's preferences.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -43,7 +43,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -53,7 +53,7 @@ extern NSString *DMKDisplayWindowAlphaKey;
 extern NSString *DMKDisplayToolTipsKey;
 
 @interface AppDelegate : NSObject {
-	NSWindowController *preferencesController;
+    NSWindowController *preferencesController;
 }
 
 - (MyDocument *)mainDocument;

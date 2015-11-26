@@ -3,7 +3,7 @@
      File: DMKArrayController.m
  Abstract: An array controller subclass to manage a collection of text snippets, including support for drag and drop.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -43,7 +43,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -68,27 +68,27 @@ NSString *MovedRowsUTI = @"com.yourcompany.demomonkey.movedrows";
     // Register the table view for drag and drop.
     [tableView registerForDraggedTypes:[NSArray arrayWithObjects:StepUTI, MovedRowsUTI, NSStringPboardType, nil]];
     [tableView setAllowsMultipleSelection:YES];
-	[tableView setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
+    [tableView setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
 }
 
 
 - (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard {
-	/*
-	 Take ownership of the pasteboard, then:
-	 * Write the currently-selected steps directly;
-	 * Archive the selection index set and write the archive to the pasteboard as the data for the moved rows type.  The index set is used in tableView:acceptDrop:row:dropOperation: if there is a reorder operation within a table view.
-	 */
-	[pboard clearContents];
-	
-	// Write the current steps.
-	[pboard writeObjects:[[self arrangedObjects] objectsAtIndexes:rowIndexes]];
+    /*
+     Take ownership of the pasteboard, then:
+     * Write the currently-selected steps directly;
+     * Archive the selection index set and write the archive to the pasteboard as the data for the moved rows type.  The index set is used in tableView:acceptDrop:row:dropOperation: if there is a reorder operation within a table view.
+     */
+    [pboard clearContents];
+    
+    // Write the current steps.
+    [pboard writeObjects:[[self arrangedObjects] objectsAtIndexes:rowIndexes]];
 
-	// Add rows array for a local move.
-	[pboard addTypes:[NSArray arrayWithObject:MovedRowsUTI] owner:self];		
-	NSData *rowIndexesData = [NSArchiver archivedDataWithRootObject:rowIndexes];
-	[pboard setData:rowIndexesData forType:MovedRowsUTI];		
-	
-	return YES;
+    // Add rows array for a local move.
+    [pboard addTypes:[NSArray arrayWithObject:MovedRowsUTI] owner:self];        
+    NSData *rowIndexesData = [NSArchiver archivedDataWithRootObject:rowIndexes];
+    [pboard setData:rowIndexesData forType:MovedRowsUTI];        
+    
+    return YES;
 }
 
 
@@ -99,54 +99,54 @@ NSString *MovedRowsUTI = @"com.yourcompany.demomonkey.movedrows";
     
     // If drag source is self, it's a move.
     if ([info draggingSource] == tableView) {
-		dragOp =  NSDragOperationMove;
+        dragOp =  NSDragOperationMove;
     }
-	
+    
     // Put the object at, not over, the current row (contrast NSTableViewDropOn).
-	if ([[self arrangedObjects] count] > 0) {
-		[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
-	}
+    if ([[self arrangedObjects] count] > 0) {
+        [aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
+    }
     return dragOp;
 }
 
 
 - (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation {
     
-	if (row < 0) {
-		row = 0;
-	}
-    /*
-	 If the dragging source is our table view, look for the moved rows type for a reorder operation.
-	 */
-	if ([info draggingSource] == tableView) {
-		
-		NSData *rowsData = [[info draggingPasteboard] dataForType:MovedRowsUTI];
-		NSIndexSet  *indexSet = [NSUnarchiver unarchiveObjectWithData:rowsData];		
-		[self moveObjectsInArrangedObjectsFromIndexes:indexSet toIndex:row];
-		
-		/*
-		 Set the selected rows to those that were just moved.  Work out what moved where to determine proper selection.
-		 */
-		NSInteger rowsAbove = [self rowsAboveRow:row inIndexSet:indexSet];
-		NSRange range = NSMakeRange(row - rowsAbove, [indexSet count]);
-		indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
-		[self setSelectionIndexes:indexSet];
-		
-		return YES;
+    if (row < 0) {
+        row = 0;
     }
-	
-	/*
-	 If the dragging source is something other than our table view, create new steps from whatever's on the pasteboard and add them.
-	 */
-	NSDictionary *options = [NSDictionary dictionary];
-	NSArray *newSteps = [[info draggingPasteboard] readObjectsForClasses:[NSArray arrayWithObject:[Step class]] options:options];
-	if (newSteps == nil) {
-		return NO;
-	}
+    /*
+     If the dragging source is our table view, look for the moved rows type for a reorder operation.
+     */
+    if ([info draggingSource] == tableView) {
+        
+        NSData *rowsData = [[info draggingPasteboard] dataForType:MovedRowsUTI];
+        NSIndexSet  *indexSet = [NSUnarchiver unarchiveObjectWithData:rowsData];        
+        [self moveObjectsInArrangedObjectsFromIndexes:indexSet toIndex:row];
+        
+        /*
+         Set the selected rows to those that were just moved.  Work out what moved where to determine proper selection.
+         */
+        NSInteger rowsAbove = [self rowsAboveRow:row inIndexSet:indexSet];
+        NSRange range = NSMakeRange(row - rowsAbove, [indexSet count]);
+        indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
+        [self setSelectionIndexes:indexSet];
+        
+        return YES;
+    }
+    
+    /*
+     If the dragging source is something other than our table view, create new steps from whatever's on the pasteboard and add them.
+     */
+    NSDictionary *options = [NSDictionary dictionary];
+    NSArray *newSteps = [[info draggingPasteboard] readObjectsForClasses:[NSArray arrayWithObject:[Step class]] options:options];
+    if (newSteps == nil) {
+        return NO;
+    }
 
-	NSRange insertionRange = NSMakeRange(row, [newSteps count]);
-	NSIndexSet *insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:insertionRange];
-	[self insertObjects:newSteps atArrangedObjectIndexes:insertionIndexes];
+    NSRange insertionRange = NSMakeRange(row, [newSteps count]);
+    NSIndexSet *insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:insertionRange];
+    [self insertObjects:newSteps atArrangedObjectIndexes:insertionIndexes];
     return YES;
 }
 
@@ -155,23 +155,23 @@ NSString *MovedRowsUTI = @"com.yourcompany.demomonkey.movedrows";
 #pragma mark New objects
 
 - (id)newObject {
-	// Configure a new object.
-	Step *newObject = [super newObject];
-	NSUInteger row = [[self arrangedObjects] count];
-	newObject.tableSummary = [NSString stringWithFormat:@"Step %d", (row +1)];
-	newObject.undoManager = [[windowController document] undoManager];
-	return newObject;
+    // Configure a new object.
+    Step *newObject = [super newObject];
+    NSUInteger row = [[self arrangedObjects] count];
+    newObject.tableSummary = [NSString stringWithFormat:@"Step %d", (row +1)];
+    newObject.undoManager = [[windowController document] undoManager];
+    return newObject;
 }
 
 
 - (void)add:sender {
-	// Add a new object, then select its row.
-	Step *newObject = [super newObject];
-	NSUInteger row = [[self arrangedObjects] count];
-	[self insertObject:newObject atArrangedObjectIndex:row];
-	[tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-	[tableView editColumn:0 row:row withEvent:nil select:YES];
-	[newObject release];
+    // Add a new object, then select its row.
+    Step *newObject = [super newObject];
+    NSUInteger row = [[self arrangedObjects] count];
+    [self insertObject:newObject atArrangedObjectIndex:row];
+    [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+    [tableView editColumn:0 row:row withEvent:nil select:YES];
+    [newObject release];
 }
 
 
@@ -179,39 +179,39 @@ NSString *MovedRowsUTI = @"com.yourcompany.demomonkey.movedrows";
 #pragma mark Reorder operation
 
 -(void) moveObjectsInArrangedObjectsFromIndexes:(NSIndexSet*)indexSet toIndex:(NSUInteger)insertIndex {
-	
+    
     NSArray *objects = [self arrangedObjects];
-	NSInteger idx = [indexSet lastIndex];
-	
+    NSInteger idx = [indexSet lastIndex];
+    
     NSInteger aboveInsertIndexCount = 0;
-    id object;
+    id object = nil;
     NSInteger removeIndex;
-	
+    
     while (NSNotFound != idx) {
-		if (idx >= insertIndex) {
-			removeIndex = idx + aboveInsertIndexCount;
-			aboveInsertIndexCount += 1;
-		}
-		else {
-			removeIndex = idx;
-			insertIndex -= 1;
-		}
-		object = [[objects objectAtIndex:removeIndex] retain];
-		[self removeObjectAtArrangedObjectIndex:removeIndex];
-		[self insertObject:object atArrangedObjectIndex:insertIndex];
-		[object release];
-		idx = [indexSet indexLessThanIndex:idx];
+        if (idx >= insertIndex) {
+            removeIndex = idx + aboveInsertIndexCount;
+            aboveInsertIndexCount += 1;
+        }
+        else {
+            removeIndex = idx;
+            insertIndex -= 1;
+        }
+        object = [[objects objectAtIndex:removeIndex] retain];
+        [self removeObjectAtArrangedObjectIndex:removeIndex];
+        [self insertObject:object atArrangedObjectIndex:insertIndex];
+        [object release];
+        idx = [indexSet indexLessThanIndex:idx];
     }
 }
 
 
 - (NSInteger)rowsAboveRow:(NSInteger)row inIndexSet:(NSIndexSet *)indexSet {
     
-	NSUInteger currentIndex = [indexSet firstIndex];
+    NSUInteger currentIndex = [indexSet firstIndex];
     NSInteger i = 0;
     while (currentIndex != NSNotFound) {
-		if (currentIndex < row) { i++; }
-		currentIndex = [indexSet indexGreaterThanIndex:currentIndex];
+        if (currentIndex < row) { i++; }
+        currentIndex = [indexSet indexGreaterThanIndex:currentIndex];
     }
     return i;
 }

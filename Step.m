@@ -4,7 +4,7 @@
  Abstract: A model object to represent a code step in a presentation.
  The class conforms to the NSCoding, NSPasteboardReading, and NSPasteboardWriting protocols so that instances can be used with archives and written to and read from a pasteboard.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -44,7 +44,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -65,20 +65,20 @@ static NSString *TableSummaryKey = @"TableSummary";
 
 
 - (id)initWithCoder:(NSCoder *)coder {
-	
-	if (self = [super init]) {
-		body = [[coder decodeObjectForKey:BodyKey] retain];	
-		tooltip = [[coder decodeObjectForKey:ToolTipKey] retain];	
-		tableSummary = [[coder decodeObjectForKey:TableSummaryKey] retain];	
-	}
-	return self;
+    
+    if (self = [super init]) {
+        body = [[coder decodeObjectForKey:BodyKey] retain];    
+        tooltip = [[coder decodeObjectForKey:ToolTipKey] retain];    
+        tableSummary = [[coder decodeObjectForKey:TableSummaryKey] retain];    
+    }
+    return self;
 }
 
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-	[encoder encodeObject:body forKey:BodyKey];
-	[encoder encodeObject:tooltip forKey:ToolTipKey];
-	[encoder encodeObject:tableSummary forKey:TableSummaryKey];
+    [encoder encodeObject:body forKey:BodyKey];
+    [encoder encodeObject:tooltip forKey:ToolTipKey];
+    [encoder encodeObject:tableSummary forKey:TableSummaryKey];
 }
 
 
@@ -89,7 +89,7 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
 
 - (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
     static NSArray *writableTypes = nil;
-	
+    
     if (!writableTypes) {
         writableTypes = [[NSArray alloc] initWithObjects:StepUTI, NSPasteboardTypeString, nil];
     }
@@ -98,11 +98,11 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
 
 
 - (id)pasteboardPropertyListForType:(NSString *)type {
-	
+    
     if ([type isEqualToString:StepUTI]) {
         return [NSKeyedArchiver archivedDataWithRootObject:self];
     }
-	if ([type isEqualToString:NSPasteboardTypeString]) {
+    if ([type isEqualToString:NSPasteboardTypeString]) {
         return [self description];
     }
     return nil;
@@ -110,7 +110,7 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
 
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
-	
+    
     static NSArray *readableTypes = nil;
     if (!readableTypes) {
         readableTypes = [[NSArray alloc] initWithObjects:StepUTI, NSPasteboardTypeString, nil];
@@ -123,10 +123,10 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
     if ([type isEqualToString:StepUTI]) {
         /*
          This means you don't need to implement code for this type in initWithPasteboardPropertyList:ofType: -- initWithCoder: is invoked instead.
-		 */
+         */
         return NSPasteboardReadingAsKeyedArchive;
     }
-	if ([type isEqualToString:NSPasteboardTypeString]) {
+    if ([type isEqualToString:NSPasteboardTypeString]) {
         return NSPasteboardReadingAsString;
     }
     return 0;
@@ -134,8 +134,9 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
 
 
 - (id)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
-	
-    if (self = [self init]) {
+    
+    self = [self init];
+    if (self) {
         if ([type isEqualToString:NSPasteboardTypeString]) {
             [body release];
             body = [propertyList copy];
@@ -150,11 +151,11 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
 
 
 - (NSString *)description {
-	NSString *description = body;
-	if (!description) {
-		description = @"No body";
-	}
-	return description;
+    NSString *description = body;
+    if (!description) {
+        description = @"No body";
+    }
+    return description;
 }
 
 
@@ -162,27 +163,27 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
 #pragma mark Set accessors
 
 - (void)setBody:(NSString *)newBody {
-	if (body != newBody) {
-		[undoManager registerUndoWithTarget:self selector:@selector(setBody:) object:body];
-		[body release];
-		body = [newBody retain];
-	}
+    if (body != newBody) {
+        [undoManager registerUndoWithTarget:self selector:@selector(setBody:) object:body];
+        [body release];
+        body = [newBody retain];
+    }
 }
 
 - (void)setTableSummary:(NSString *)newTableSummary {
-	if (tableSummary != newTableSummary) {
-		[undoManager registerUndoWithTarget:self selector:@selector(setTableSummary:) object:tableSummary];
-		[tableSummary release];
-		tableSummary = [newTableSummary retain];
-	}
+    if (tableSummary != newTableSummary) {
+        [undoManager registerUndoWithTarget:self selector:@selector(setTableSummary:) object:tableSummary];
+        [tableSummary release];
+        tableSummary = [newTableSummary retain];
+    }
 }
 
 - (void)setTooltip:(NSString *)newTooltip {
-	if (tooltip != newTooltip) {
-		[undoManager registerUndoWithTarget:self selector:@selector(setTooltip:) object:tooltip];
-		[tooltip release];
-		tooltip = [newTooltip retain];
-	}
+    if (tooltip != newTooltip) {
+        [undoManager registerUndoWithTarget:self selector:@selector(setTooltip:) object:tooltip];
+        [tooltip release];
+        tooltip = [newTooltip retain];
+    }
 }
 
 
@@ -190,20 +191,21 @@ NSString *StepUTI = @"com.yourcompany.demomonkey.step";
 #pragma mark Object lifecycle
 
 -(id)init {
-	if (self = [super init]) {	
-		body = @"";
-		tooltip = @"";
-		tableSummary = @"New Step";
-	}
-	return self;
+    self = [super init];
+    if (self) {    
+        body = @"";
+        tooltip = @"";
+        tableSummary = @"New Step";
+    }
+    return self;
 }
 
 
 - (void)dealloc {
-	[body release];
-	[tooltip release];
-	[tableSummary release];
-	[super dealloc];
+    [body release];
+    [tooltip release];
+    [tableSummary release];
+    [super dealloc];
 }
 
 

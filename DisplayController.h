@@ -3,7 +3,7 @@
      File: DisplayController.h
  Abstract: A window controller to display the titles of the text snippets.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -43,13 +43,13 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
 @interface DisplayController : NSWindowController <NSTableViewDelegate> {
-	NSArrayController *arrayController;
-	NSTableView *tableView;
+    NSArrayController *arrayController;
+    NSTableView *tableView;
 }
 
 @property (assign) IBOutlet NSArrayController *arrayController;

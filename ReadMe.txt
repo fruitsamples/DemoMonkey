@@ -30,7 +30,7 @@ Document object to manage a collection of text snippets; the snippets may be dis
 DisplayController.{h,m}
 A window controller to display the titles of the text snippets.
 
-EditController.{h,m"
+EditController.{h,m}
 A window controller to manage editing the text snippets.
 
 AppDelegate.{h,m}
@@ -46,8 +46,11 @@ The class conforms to the NSCoding, NSPasteboardReading, and NSPasteboardWriting
 ===========================================================================
 CHANGES FROM PREVIOUS VERSIONS:
 
+Version 1.1
+- Removed extraneous comments and log statements. Updated implementation of initializer methods.
+
 Version 1.0
 - First version.
 
 ===========================================================================
-Copyright (C) 2009 Apple Inc. All rights reserved.
+Copyright (C) 2009-2010 Apple Inc. All rights reserved.

@@ -4,7 +4,7 @@
  Abstract: A model object to represent a code step in a presentation.
  The class conforms to the NSCoding, NSPasteboardReading, and NSPasteboardWriting protocols so that instances can be used with archives and written to and read from a pasteboard.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -44,17 +44,17 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
 extern NSString *StepUTI;
 
 @interface Step : NSObject <NSCoding, NSPasteboardReading, NSPasteboardWriting> {
-	NSString *tableSummary;
-	NSString *body;
-	NSString *tooltip;
-	NSUndoManager *undoManager;
+    NSString *tableSummary;
+    NSString *body;
+    NSString *tooltip;
+    NSUndoManager *undoManager;
 }
 
 @property (nonatomic, retain) NSString *tableSummary;

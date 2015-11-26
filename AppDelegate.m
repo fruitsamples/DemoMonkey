@@ -3,7 +3,7 @@
      File: AppDelegate.m
  Abstract: Application delegate class to act as the Services provider.  Services requests are routed to the current main document. The delegate also manages the application's preferences.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -43,7 +43,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -74,67 +74,66 @@ NSString *DMKDisplayToolTipsKey = @"displayToolTips";
  */
 
 - (MyDocument *)mainDocument {
-	NSArray *documents = [[NSDocumentController sharedDocumentController] documents];
-	MyDocument *mainDocument = nil;
-	
-	if ([documents count] > 0) {
-		mainDocument = [documents objectAtIndex:0];
-	}
-	return mainDocument;
+    NSArray *documents = [[NSDocumentController sharedDocumentController] documents];
+    MyDocument *mainDocument = nil;
+    
+    if ([documents count] > 0) {
+        mainDocument = [documents objectAtIndex:0];
+    }
+    return mainDocument;
 }
 
 
 - (void)getNextLine:(NSPasteboard *)pboard userData:(NSString *)data error:(NSString **)error {
-	MyDocument *mainDocument = [self mainDocument];
-	if (mainDocument != nil) {
-		NSString *text = [mainDocument textForCurrentSelectionAndAdvance];
-		[pboard clearContents];
-		[pboard writeObjects:[NSArray arrayWithObject:text]];
-	}
+    MyDocument *mainDocument = [self mainDocument];
+    if (mainDocument != nil) {
+        NSString *text = [mainDocument textForCurrentSelectionAndAdvance];
+        [pboard clearContents];
+        [pboard writeObjects:[NSArray arrayWithObject:text]];
+    }
 }
 
 - (void)rewind:(NSPasteboard *)pboard userData:(NSString *)data error:(NSString **)error {
-	[[self mainDocument] rewind];
+    [[self mainDocument] rewind];
 }
 
 - (void)moveDownOneLine:(NSPasteboard *)pboard userData:(NSString *)data error:(NSString **)error {
-	[[self mainDocument] moveDownOneLine];
+    [[self mainDocument] moveDownOneLine];
 }
 
 - (void)moveUpOneLine:(NSPasteboard *)pboard userData:(NSString *)data error:(NSString **)error {
-	[[self mainDocument] moveUpOneLine];
+    [[self mainDocument] moveUpOneLine];
 }
 
 - (void)createNewStep:(NSPasteboard *)pboard userData:(NSString *)data error:(NSString **)error {
-	[[self mainDocument] createNewStep:pboard userData:data error:error];
+    [[self mainDocument] createNewStep:pboard userData:data error:error];
 }
 
 
 #pragma mark -
 #pragma mark User defaults
 
-+ (void)initialize {	
-	NSMutableDictionary *initialValues = [NSMutableDictionary dictionary];
-	
-	[initialValues setObject:[NSNumber numberWithBool:YES] forKey:DMKOpenUntitledDocumentOnLaunchKey];
-	[initialValues setObject:[NSNumber numberWithInteger:1] forKey:DMKDisplayWindowAlphaKey];
-	[initialValues setObject:[NSNumber numberWithBool:YES] forKey:DMKDisplayToolTipsKey];
-	
-	[[NSUserDefaultsController sharedUserDefaultsController]
-	 setInitialValues:initialValues];
++ (void)initialize {    
+    NSMutableDictionary *initialValues = [NSMutableDictionary dictionary];
+    
+    [initialValues setObject:[NSNumber numberWithBool:YES] forKey:DMKOpenUntitledDocumentOnLaunchKey];
+    [initialValues setObject:[NSNumber numberWithInteger:1] forKey:DMKDisplayWindowAlphaKey];
+    [initialValues setObject:[NSNumber numberWithBool:YES] forKey:DMKDisplayToolTipsKey];
+    
+    [[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:initialValues];
 }
 
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
-	return [[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:DMKOpenUntitledDocumentOnLaunchKey] boolValue];
+    return [[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:DMKOpenUntitledDocumentOnLaunchKey] boolValue];
 }
 
 
 - (IBAction)showPreferences:sender {
-	if (preferencesController == nil) {
-		preferencesController = [[NSWindowController alloc] initWithWindowNibName:@"Preferences"];
-	}
-	[preferencesController showWindow:self];
+    if (preferencesController == nil) {
+        preferencesController = [[NSWindowController alloc] initWithWindowNibName:@"Preferences"];
+    }
+    [preferencesController showWindow:self];
 }
 
 
@@ -142,8 +141,8 @@ NSString *DMKDisplayToolTipsKey = @"displayToolTips";
 #pragma mark Memory management
 
 - (void)dealloc {
-	[preferencesController release];
-	[super dealloc];
+    [preferencesController release];
+    [super dealloc];
 }
 
 

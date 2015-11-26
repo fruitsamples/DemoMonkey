@@ -5,7 +5,7 @@
  * A window managed by a DisplayController window controller which is solely for display purposes;
  * Optionally, a window managed by an EditController window controller, which is used for editing the snippets. 
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -45,7 +45,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -67,37 +67,37 @@
  Service items apply to the display controller.
  */
 -(NSString *)textForCurrentSelectionAndAdvance {
-	return [displayController textForCurrentSelectionAndAdvance];
+    return [displayController textForCurrentSelectionAndAdvance];
 }
 
 - (void)rewind {
-	[displayController rewind];
+    [displayController rewind];
 }
 
 - (void)moveUpOneLine {
-	[displayController moveUpOneLine];
+    [displayController moveUpOneLine];
 }
 
 - (void)moveDownOneLine {
-	[displayController moveDownOneLine];
+    [displayController moveDownOneLine];
 }
 
 - (void)createNewStep:(NSPasteboard *)pboard userData:(NSString *)data error:(NSString **)error {
-	
-	NSArray *newSteps = [pboard readObjectsForClasses:[NSArray arrayWithObject:[Step class]] options:[NSDictionary dictionary]];
-	
-	if ([newSteps count] != 1) {
-		*error = NSLocalizedString(@"Couldn't create a step", @"Service error message");
-		return;
-	}
-	
-	Step *newStep = [newSteps objectAtIndex:0];	
-	NSUInteger currentStepCount = [self countOfSteps];	
-	newStep.tableSummary = [NSString stringWithFormat:@"Step %d", currentStepCount];
-	newStep.undoManager = [self undoManager];
-	
-	[self insertObject:newStep inStepsAtIndex:currentStepCount];	
-	[self editSteps:nil];
+    
+    NSArray *newSteps = [pboard readObjectsForClasses:[NSArray arrayWithObject:[Step class]] options:[NSDictionary dictionary]];
+    
+    if ([newSteps count] != 1) {
+        *error = NSLocalizedString(@"Couldn't create a step", @"Service error message");
+        return;
+    }
+    
+    Step *newStep = [newSteps objectAtIndex:0];    
+    NSUInteger currentStepCount = [self countOfSteps];    
+    newStep.tableSummary = [NSString stringWithFormat:@"Step %d", currentStepCount];
+    newStep.undoManager = [self undoManager];
+    
+    [self insertObject:newStep inStepsAtIndex:currentStepCount];    
+    [self editSteps:nil];
 }
 
 
@@ -106,14 +106,14 @@
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
 
-	NSArray *newSteps = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-	self.steps = newSteps;
-	return YES;
+    NSArray *newSteps = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    self.steps = newSteps;
+    return YES;
 }
 
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
-	return [NSKeyedArchiver archivedDataWithRootObject:steps];
+    return [NSKeyedArchiver archivedDataWithRootObject:steps];
 }
 
 
@@ -121,45 +121,45 @@
 #pragma mark Managing window controllers
 
 - (void)makeWindowControllers {
-	
-	// Create the display controller and keep a reference to it.
-	DisplayController *aDisplayController = [[DisplayController alloc] initWithWindowNibName:@"Display"];
-	[aDisplayController setShouldCloseDocument:YES];
-	[aDisplayController showWindow:self];
-	[self addWindowController:aDisplayController];
-	self.displayController = aDisplayController;
-	[aDisplayController release];
+    
+    // Create the display controller and keep a reference to it.
+    DisplayController *aDisplayController = [[DisplayController alloc] initWithWindowNibName:@"Display"];
+    [aDisplayController setShouldCloseDocument:YES];
+    [aDisplayController showWindow:self];
+    [self addWindowController:aDisplayController];
+    self.displayController = aDisplayController;
+    [aDisplayController release];
 }
 
 
 - (EditController *)editController {
-	/*
-	 If an edit controller exists, it's the second object in window controllers array.  If there's only one item in the array, create a new edit controller.
-	 */
-	EditController *editController = nil;
-	NSArray *myWindowControllers = [self windowControllers];
-	
-	if ([myWindowControllers count] == 1) {
-		editController = [[EditController alloc] initWithWindowNibName:@"Edit"];
-		[self addWindowController:editController];
-		[editController release];
-		// Position the edit window atop the display window.
-		NSRect frame = [[displayController window] frame];
-		NSPoint topLeft = frame.origin;
-		topLeft.y += [[[displayController window] contentView] frame].size.height;
-		[[editController window] setFrameTopLeftPoint:topLeft];
-	}
-	else {
-		editController = [myWindowControllers objectAtIndex:1];
-	}
-	
-	return editController;
-}	
+    /*
+     If an edit controller exists, it's the second object in window controllers array.  If there's only one item in the array, create a new edit controller.
+     */
+    EditController *editController = nil;
+    NSArray *myWindowControllers = [self windowControllers];
+    
+    if ([myWindowControllers count] == 1) {
+        editController = [[EditController alloc] initWithWindowNibName:@"Edit"];
+        [self addWindowController:editController];
+        [editController release];
+        // Position the edit window atop the display window.
+        NSRect frame = [[displayController window] frame];
+        NSPoint topLeft = frame.origin;
+        topLeft.y += [[[displayController window] contentView] frame].size.height;
+        [[editController window] setFrameTopLeftPoint:topLeft];
+    }
+    else {
+        editController = [myWindowControllers objectAtIndex:1];
+    }
+    
+    return editController;
+}    
 
 
 
 - (IBAction)editSteps:sender {
-	[self.editController showWindow:self];
+    [self.editController showWindow:self];
 }
 
 
@@ -175,26 +175,26 @@
 }
 
 - (void)insertObject:(id)anObject inStepsAtIndex:(NSUInteger)idx {
-	[[[self undoManager] prepareWithInvocationTarget:self] removeObjectFromStepsAtIndex:idx];		
+    [[[self undoManager] prepareWithInvocationTarget:self] removeObjectFromStepsAtIndex:idx];        
     [steps insertObject:anObject atIndex:idx];
 }
 
 - (void)removeObjectFromStepsAtIndex:(NSUInteger)idx {
-	
-	id anObject = [self objectInStepsAtIndex:idx];
-	[[[self undoManager] prepareWithInvocationTarget:self] insertObject:anObject inStepsAtIndex:idx];	
+    
+    id anObject = [self objectInStepsAtIndex:idx];
+    [[[self undoManager] prepareWithInvocationTarget:self] insertObject:anObject inStepsAtIndex:idx];    
     [steps removeObjectAtIndex:idx];
 }
 
 - (void)replaceObjectInStepsAtIndex:(unsigned int)idx withObject:(id)anObject {
-	
-	id oldObject = [self objectInStepsAtIndex:idx];
-	[[[self undoManager] prepareWithInvocationTarget:self] replaceObjectInStepsAtIndex:idx withObject:oldObject];
+    
+    id oldObject = [self objectInStepsAtIndex:idx];
+    [[[self undoManager] prepareWithInvocationTarget:self] replaceObjectInStepsAtIndex:idx withObject:oldObject];
     [steps replaceObjectAtIndex:idx withObject:anObject];
 }
 
 - (NSArray *)steps {
-	return steps;
+    return steps;
 }
 
 - (void)setSteps:(NSArray *)aSteps {
@@ -209,10 +209,10 @@
 #pragma mark Object lifecycle
 
 - init {
-	if (self = [super init]) {
-		steps = [[NSMutableArray alloc] init];
-	}
-	return self;	
+    if (self = [super init]) {
+        steps = [[NSMutableArray alloc] init];
+    }
+    return self;    
 }
 
 

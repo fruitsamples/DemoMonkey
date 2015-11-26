@@ -2,7 +2,7 @@
      File: EditController.m
  Abstract: A window controller to manage editing the text snippets.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -42,7 +42,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -58,47 +58,47 @@
 
 - (BOOL)validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem {
 
-	/*
-	 Given that you can create a step from a string, this doesn't exclude very much, but it's useful as an illustration.
-	 */
-	if ([anItem action] == @selector(paste:)) {
-		
-		NSPasteboard * generalPasteboard = [NSPasteboard generalPasteboard];
-		NSDictionary *options = [NSDictionary dictionary];
-		return [generalPasteboard canReadObjectForClasses:[NSArray arrayWithObject:[Step class]] options:options];
-	}
-	return [[self document] validateUserInterfaceItem:anItem];
+    /*
+     Given that you can create a step from a string, this doesn't exclude very much, but it's useful as an illustration.
+     */
+    if ([anItem action] == @selector(paste:)) {
+        
+        NSPasteboard * generalPasteboard = [NSPasteboard generalPasteboard];
+        NSDictionary *options = [NSDictionary dictionary];
+        return [generalPasteboard canReadObjectForClasses:[NSArray arrayWithObject:[Step class]] options:options];
+    }
+    return [[self document] validateUserInterfaceItem:anItem];
 }
 
 
 - (IBAction)paste:sender {
-	
-	/*
-	 Create new steps from the pasteboard; add them to the array controller; then select the new rows.
-	 */
-	NSPasteboard * generalPasteboard = [NSPasteboard generalPasteboard];
-	NSDictionary *options = [NSDictionary dictionary];
-	
-	NSArray *newSteps = [generalPasteboard readObjectsForClasses:[NSArray arrayWithObject:[Step class]] options:options];
-	
-	NSInteger insertionPoint = [[arrayController arrangedObjects] count];
-	NSRange range = NSMakeRange(insertionPoint, [newSteps count]);
-	NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
+    
+    /*
+     Create new steps from the pasteboard; add them to the array controller; then select the new rows.
+     */
+    NSPasteboard * generalPasteboard = [NSPasteboard generalPasteboard];
+    NSDictionary *options = [NSDictionary dictionary];
+    
+    NSArray *newSteps = [generalPasteboard readObjectsForClasses:[NSArray arrayWithObject:[Step class]] options:options];
+    
+    NSInteger insertionPoint = [[arrayController arrangedObjects] count];
+    NSRange range = NSMakeRange(insertionPoint, [newSteps count]);
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
 
-	[arrayController insertObjects:newSteps atArrangedObjectIndexes:indexSet];
-	[arrayController setSelectionIndexes:indexSet];
+    [arrayController insertObjects:newSteps atArrangedObjectIndexes:indexSet];
+    [arrayController setSelectionIndexes:indexSet];
 }
 
 
 - (IBAction)copy:sender {
-	
-	/*
-	 Write the selected steps to the pasteboard.
-	 */
-	NSArray *objects = [arrayController selectedObjects];
-	NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
-	[generalPasteboard clearContents];
-	[generalPasteboard writeObjects:objects];
+    
+    /*
+     Write the selected steps to the pasteboard.
+     */
+    NSArray *objects = [arrayController selectedObjects];
+    NSPasteboard *generalPasteboard = [NSPasteboard generalPasteboard];
+    [generalPasteboard clearContents];
+    [generalPasteboard writeObjects:objects];
 }
 
 

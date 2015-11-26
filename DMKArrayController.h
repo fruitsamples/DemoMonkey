@@ -3,7 +3,7 @@
      File: DMKArrayController.h
  Abstract: An array controller subclass to manage a collection of text snippets, including support for drag and drop.
  
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -43,7 +43,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -51,7 +51,7 @@
 @class EditController;
 
 @interface DMKArrayController : NSArrayController {
-	NSTableView *tableView;
+    NSTableView *tableView;
     EditController *windowController;
 }
 
@@ -68,9 +68,7 @@
     
 
 // Utility methods.
--(void)moveObjectsInArrangedObjectsFromIndexes:(NSIndexSet *)indexSet 
-				    toIndex:(unsigned)index;
-
+-(void)moveObjectsInArrangedObjectsFromIndexes:(NSIndexSet *)indexSet toIndex:(unsigned)index;
 - (NSInteger)rowsAboveRow:(NSInteger)row inIndexSet:(NSIndexSet *)indexSet;
 
 @end
